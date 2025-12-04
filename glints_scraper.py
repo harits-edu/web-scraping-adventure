@@ -1,6 +1,3 @@
-# [] - Haritsyam Anshari, harits-edu - []
-# [] - web-scraping-adventure project - []
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -21,9 +18,9 @@ def run_scraper():
             script_sql = file_sql.read()
             cursor.executescript(script_sql)
         conn.commit()
-        print("Database is ready to use by Kalibrr")
+        print("Database is ready to use by Glints")
     except FileNotFoundError:
-        print("schema.sql can not be found by Kalibrr")
+        print("schema.sql can not be found by Glints")
 
     job_title = config.job_keyword
     parts = job_title.split()
@@ -39,11 +36,11 @@ def run_scraper():
     )
 
     driver = webdriver.Chrome(options=Options)
-    driver.get("https://www.kalibrr.id/id-ID/home/co/Indonesia")
+    driver.get("https://glints.com/id/en")
 
     WebDriverWait(driver, 5).until(
         EC.presence_of_element_located(
-            (By.CSS_SELECTOR, "input[placeholder='Job Position']")
+            (By.CSS_SELECTOR, "input[placeholder='Search by Title, Skill or Company']")
         )
     ).send_keys(job_title + Keys.ENTER)
 
@@ -51,13 +48,13 @@ def run_scraper():
 
     jobs = WebDriverWait(driver, 5).until(
         EC.visibility_of_all_elements_located(
-            (By.XPATH, "//div[h2/a[@itemprop='name']]")
+            (By.XPATH, "//div[@data-glints-tracking-element-name='job_card']")
         )
     )
 
     for job in jobs:
         try:
-            title_element = job.find_element(By.XPATH, ".//a[@itemprop='name']")
+            title_element = job.find_element(By.XPATH, ".//a[contains(@class, 'JobCardTitle')]")
             title = title_element.text
         except:
             continue
@@ -76,7 +73,7 @@ def run_scraper():
 
             try:
                 company_element = job.find_element(
-                    By.XPATH, ".//a[contains(@href, 'action=Company')]"
+                    By.XPATH, ".//a[contains(@class, 'CompanyLink')]"
                 )
                 company = company_element.text
             except:
@@ -85,14 +82,14 @@ def run_scraper():
             print(f"Position    : {title}")
             print(f"Company     : {company}")
             print(f"Link        : {link}")
-            print("Job Site    : Kalibrr")
+            print("Job Site    : Glints")
             print(f"Keyword     : {config.job_keyword}")
 
             cursor.execute(
                 """
                 INSERT OR IGNORE INTO jobs (position, company, link, job_site, job_keyword)
                 VALUES (?, ?, ?, ?, ?)""",
-                (title, company, link, "Kalibrr", config.job_keyword),
+                (title, company, link, "Glints", config.job_keyword),
             )
 
             if cursor.rowcount > 0:

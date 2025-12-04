@@ -1,11 +1,17 @@
 import time
 import scraper
+import glints_scraper
 import emailer
 
 
 def main():
     try:
         scraper.run_scraper()
+    except Exception as Error:
+        print(f"Scraping error: {Error}")
+
+    try:
+        glints_scraper.run_scraper()
     except Exception as Error:
         print(f"Scraping error: {Error}")
 
