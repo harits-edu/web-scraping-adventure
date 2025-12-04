@@ -14,10 +14,10 @@ def retrieve_jobs():
 
     cursor.execute(
         """
-        SELECT "position", "company", "link", "date_found"
+        SELECT "position", "company", "link", "date_found", "job_site"
         FROM "jobs"
-        WHERE "date_found" LIKE ?""",
-        (f"{today_ymd}%",),
+        WHERE "date_found" LIKE ? AND "job_keyword" = ?""",
+        (f"{today_ymd}%", config.job_keyword),
     )
 
     data = cursor.fetchall()
@@ -37,13 +37,13 @@ def report():
 
     list_items = ""
     for job in jobs:
-        position, company, link, date_found = job
+        position, company, link, date_found, job_site = job
         list_items += f"""
         <div style="display: flex; align-items: center; width: 100%; border-bottom: 1px solid #eeeeee; padding-bottom: 15px; margin-bottom: 15px;">
             
             <div style="text-align: left; padding-left: 12px;">
                 <div style="font-size: 12px; color: #777777; margin-bottom: 4px;">
-                    ☆ {date_found}
+                    ☆ {date_found} on {job_site}
                 </div>
                 <div style="font-size: 18px; font-weight: bold; color: #333333; margin-bottom: 2px;">
                     {position}
@@ -67,9 +67,11 @@ def report():
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
             <div style="max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
                 
-                <h2 style="color: #2c3e50; text-align: center;"Vacancies Report</h2>
+                <h2 style="color: #2c3e50; text-align: center;">Vacancies Report</h2>
                 
-                <p>Hello, these are <b>{len(jobs)} new positions</b> on keyword: <i>{config.job_keyword}</i></p>
+                <p style="font-size: 16px; color: #2c3e50; text-align:center;">
+                    Hello, these are <b>{len(jobs)} new positions</b> on keyword: <i>{config.job_keyword}</i>
+                </p>
                 
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 17px 0;">
                 

@@ -11,6 +11,7 @@ import re
 import config
 import sqlite3
 
+
 def run_scraper():
     conn = sqlite3.connect("vacancy.db")
     cursor = conn.cursor()
@@ -29,11 +30,13 @@ def run_scraper():
 
     Options = webdriver.ChromeOptions()
 
-    Options.add_argument("--headless=new") 
-    Options.add_argument("--disable-gpu") 
-    Options.add_argument("--no-sandbox") 
+    Options.add_argument("--headless=new")
+    Options.add_argument("--disable-gpu")
+    Options.add_argument("--no-sandbox")
     Options.add_argument("--window-size=1920,1080")
-    Options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+    Options.add_argument(
+        "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    )
 
     driver = webdriver.Chrome(options=Options)
     driver.get("https://www.kalibrr.id/id-ID/home/co/Indonesia")
@@ -47,7 +50,9 @@ def run_scraper():
     time.sleep(10)
 
     jobs = WebDriverWait(driver, 5).until(
-        EC.visibility_of_all_elements_located((By.XPATH, "//div[h2/a[@itemprop='name']]"))
+        EC.visibility_of_all_elements_located(
+            (By.XPATH, "//div[h2/a[@itemprop='name']]")
+        )
     )
 
     for job in jobs:
@@ -80,12 +85,14 @@ def run_scraper():
             print(f"Position    : {title}")
             print(f"Company     : {company}")
             print(f"Link        : {link}")
+            print("Job Site    : Kalibrr")
+            print(f"Keyword     : {config.job_keyword}")
 
             cursor.execute(
                 """
-                INSERT OR IGNORE INTO jobs (position, company, link)
-                VALUES (?, ?, ?)""",
-                (title, company, link),
+                INSERT OR IGNORE INTO jobs (position, company, link, job_site, job_keyword)
+                VALUES (?, ?, ?, ?, ?)""",
+                (title, company, link, "Kalibrr", config.job_keyword),
             )
 
             if cursor.rowcount > 0:
@@ -98,6 +105,7 @@ def run_scraper():
 
     driver.quit()
     conn.close()
+
 
 if __name__ == "__main__":
     run_scraper()
