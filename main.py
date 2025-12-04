@@ -1,6 +1,7 @@
 import time
 import scraper
 import glints_scraper
+import jobstreet_scraper
 import emailer
 
 
@@ -12,6 +13,11 @@ def main():
 
     try:
         glints_scraper.run_scraper()
+    except Exception as Error:
+        print(f"Scraping error: {Error}")
+
+    try:
+        jobstreet_scraper.run_scraper()
     except Exception as Error:
         print(f"Scraping error: {Error}")
 
