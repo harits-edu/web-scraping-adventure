@@ -3,8 +3,7 @@ CREATE TABLE IF NOT EXISTS "jobs" (
     "position" TEXT NOT NULL,
     "company" TEXT,
     "link" TEXT UNIQUE,
-    "date_found" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "date_found" TEXT NOT NULL,
     "job_site" TEXT,
-    "job_keyword" TEXT,
     PRIMARY KEY("id")
 );

@@ -7,6 +7,7 @@ import time
 import re
 import config
 import sqlite3
+from datetime import datetime
 
 
 def run_scraper():
@@ -83,13 +84,14 @@ def run_scraper():
             print(f"Company     : {company}")
             print(f"Link        : {link}")
             print("Job Site    : Glints")
-            print(f"Keyword     : {config.job_keyword}")
+
+            now_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
             cursor.execute(
                 """
-                INSERT OR IGNORE INTO jobs (position, company, link, job_site, job_keyword)
+                INSERT OR IGNORE INTO jobs (position, company, link, job_site, date_found)
                 VALUES (?, ?, ?, ?, ?)""",
-                (title, company, link, "Glints", config.job_keyword),
+                (title, company, link, "Glints", now_time),
             )
 
             if cursor.rowcount > 0:

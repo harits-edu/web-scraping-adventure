@@ -21,7 +21,7 @@ def retrieve_jobs():
     conn.create_function("REGEX_QUERY", 2, regex_query)
     cursor = conn.cursor()
 
-    today_ymd = datetime.now().strftime("%Y-%m-%d")
+    now_time = datetime.now().strftime("%d-%m-%Y")
 
     cursor.execute(
         """
@@ -29,7 +29,7 @@ def retrieve_jobs():
         FROM "jobs"
         WHERE "date_found" LIKE ?
         AND REGEX_QUERY(position, ?) = 1""",
-        (f"{today_ymd}%", config.job_keyword),
+        (f"{now_time}%", config.job_keyword),
     )
 
     data = cursor.fetchall()
@@ -38,7 +38,7 @@ def retrieve_jobs():
 
 
 def report():
-    today_dmy = datetime.now().strftime("%d-%m-%Y")
+    now_time = datetime.now().strftime("%d-%m-%Y")
     jobs = retrieve_jobs()
 
     if not jobs:
@@ -100,7 +100,7 @@ def report():
     message = MIMEMultipart()
     message["From"] = config.sender_email
     message["To"] = config.receiver_email
-    message["Subject"] = f"Vacancies report: {len(jobs)} positions on ({today_dmy})"
+    message["Subject"] = f"Vacancies report: {len(jobs)} positions on ({now_time})"
     message.attach(MIMEText(html_content, "html"))
 
     try:
