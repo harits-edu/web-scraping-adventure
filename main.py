@@ -1,5 +1,5 @@
 import time
-import scraper
+import kalibrr_scraper
 import glints_scraper
 import jobstreet_scraper
 import emailer
@@ -7,7 +7,7 @@ import emailer
 
 def main():
     try:
-        scraper.run_scraper()
+        kalibrr_scraper.run_scraper()
     except Exception as Error:
         print(f"Scraping error: {Error}")
 

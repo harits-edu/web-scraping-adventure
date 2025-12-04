@@ -1,6 +1,3 @@
-# [] - Haritsyam Anshari, harits-edu - []
-# [] - web-scraping-adventure project - []
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
