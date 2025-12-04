@@ -4,10 +4,21 @@ import sqlite3
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import re
+
+
+def regex_query(position_db, job_keyword_config):
+    parts = job_keyword_config.split()
+    for word in parts:
+        pattern = re.escape(word)
+        if not re.search(pattern, position_db, re.IGNORECASE):
+            return False
+    return True
 
 
 def retrieve_jobs():
     conn = sqlite3.connect("vacancy.db")
+    conn.create_function("REGEX_QUERY", 2, regex_query)
     cursor = conn.cursor()
 
     today_ymd = datetime.now().strftime("%Y-%m-%d")
@@ -16,7 +27,8 @@ def retrieve_jobs():
         """
         SELECT "position", "company", "link", "date_found", "job_site"
         FROM "jobs"
-        WHERE "date_found" LIKE ? AND "job_keyword" = ?""",
+        WHERE "date_found" LIKE ?
+        AND REGEX_QUERY(position, ?) = 1""",
         (f"{today_ymd}%", config.job_keyword),
     )
 
