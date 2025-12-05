@@ -35,6 +35,7 @@ def run_scraper():
     Options.add_argument(
         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     )
+    Options.page_load_strategy = "eager"
 
     driver = webdriver.Chrome(options=Options)
     driver.get("https://glints.com/id/en")
