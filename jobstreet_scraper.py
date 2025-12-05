@@ -72,6 +72,7 @@ def run_scraper():
 
         if is_match:
             link = title_element.get_attribute("href")
+            link = link.split("?")[0]
 
             try:
                 company_element = job.find_element(
